@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAGE - Mental wellness for everyone</title>
+  <style>
+    /* Design System Variables */
+    :root {
+      --color-primary-green: #2E6B57;
+      --color-sage: #88B08A;
+      --color-moss: #6A8D73;
+      --color-stone-gray: #F6F7F5;
+      --color-text-gray: #8B8F8C;
+      --color-terracotta: #C27C5A;
+      --color-charcoal: #2B2B2B;
+      --color-error-red: #B43A3A;
+      --color-calm-blue: #B8D4D8;
+      --color-amber: #E8A87C;
+      --color-white: #FFFFFF;
+      --color-shadow: rgba(43, 43, 43, 0.1);
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: var(--color-stone-gray);
+      color: var(--color-charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      max-width: 428px;
+      margin: 0 auto;
+      background: var(--color-stone-gray);
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 80px;
+    }
+
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--color-sage), var(--color-calm-blue));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    #loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .lotus-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 32px;
+    }
+
+    .lotus-icon {
+      width: 120px;
+      height: 120px;
+      animation: lotusBloom 2s ease forwards;
+    }
+
+    .lotus-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--color-white);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @keyframes lotusBloom {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .app-name {
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .app-tagline {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 400;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 20px 16px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--color-primary-green), var(--color-sage));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .greeting {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    .settings-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--color-white);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px var(--color-shadow);
+    }
+
+    .settings-icon:hover {
+      transform: rotate(90deg);
+    }
+
+    .settings-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--color-charcoal);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Content */
+    .content {
+      padding: 0 20px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--color-white);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px var(--color-shadow);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 16px var(--color-shadow);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--color-charcoal);
+    }
+
+    /* Schedule Cards */
+    .schedule-card {
+      background: var(--color-white);
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 4px solid var(--color-primary-green);
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px var(--color-shadow);
+    }
+
+    .schedule-day {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-primary-green);
+      margin-bottom: 4px;
+    }
+
+    .schedule-activity {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 2px;
+    }
+
+    .schedule-time {
+      font-size: 13px;
+      color: var(--color-text-gray);
+    }
+
+    /* Near Me Cards */
+    .location-card {
+      background: var(--color-white);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 2px solid #E8E8E8;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .location-card:hover {
+      border-color: var(--color-primary-green);
+      box-shadow: 0 4px 12px var(--color-shadow);
+    }
+
+    .location-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .location-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    .availability-badge {
+      background: rgba(46, 107, 87, 0.15);
+      color: var(--color-primary-green);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .availability-badge.now {
+      background: rgba(232, 168, 124, 0.2);
+      color: var(--color-amber);
+    }
+
+    .location-details {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--color-text-gray);
+      margin-bottom: 12px;
+    }
+
+    .location-detail {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .book-session-btn {
+      width: 100%;
+      background: var(--color-primary-green);
+      color: var(--color-white);
+      border: none;
+      padding: 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .book-session-btn:hover {
+      background: #26594A;
+    }
+
+    /* Assessment Question */
+    .assessment-question {
+      background: var(--color-white);
+      padding: 32px 24px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px var(--color-shadow);
+    }
+
+    .question-number {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-primary-green);
+      margin-bottom: 16px;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .answer-option {
+      background: var(--color-stone-gray);
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 15px;
+    }
+
+    .answer-option:hover {
+      border-color: var(--color-sage);
+      background: rgba(136, 176, 138, 0.1);
+    }
+
+    .answer-option.selected {
+      border-color: var(--color-primary-green);
+      background: rgba(46, 107, 87, 0.1);
+    }
+
+    .assessment-nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .assessment-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .assessment-btn.secondary {
+      background: var(--color-stone-gray);
+      border: 2px solid #E8E8E8;
+      color: var(--color-charcoal);
+    }
+
+    .assessment-btn.primary {
+      background: var(--color-primary-green);
+      border: none;
+      color: var(--color-white);
+    }
+
+    .assessment-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Mind Profile Report */
+    .profile-score {
+      text-align: center;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--color-primary-green), var(--color-sage));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: var(--color-white);
+    }
+
+    .score-number {
+      font-size: 48px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .risk-bar {
+      margin-bottom: 16px;
+    }
+
+    .risk-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .risk-level {
+      height: 8px;
+      background: #E8E8E8;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .risk-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease;
+    }
+
+    .risk-fill.low { background: var(--color-sage); }
+    .risk-fill.moderate { background: var(--color-amber); }
+    .risk-fill.high { background: var(--color-terracotta); }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #E8E8E8;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-gray);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transition);
+    }
+
+    .tab.active {
+      color: var(--color-primary-green);
+      border-bottom-color: var(--color-primary-green);
+    }
+
+    .tab:hover {
+      color: var(--color-charcoal);
+    }
+
+    /* Filter Tags */
+    .filter-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .filter-tag {
+      padding: 8px 16px;
+      background: var(--color-stone-gray);
+      border: 2px solid #E8E8E8;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-tag:hover {
+      border-color: var(--color-sage);
+    }
+
+    .filter-tag.active {
+      background: rgba(46, 107, 87, 0.15);
+      border-color: var(--color-primary-green);
+      color: var(--color-primary-green);
+    }
+
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--color-sage), var(--color-calm-blue));
+      border-radius: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 16px var(--color-shadow);
+    }
+
+    /* Sound Player */
+    .sound-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sound-item {
+      background: var(--color-white);
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid #E8E8E8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .sound-item:hover {
+      border-color: var(--color-primary-green);
+    }
+
+    .play-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--color-primary-green);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .play-btn:hover {
+      background: #26594A;
+      transform: scale(1.1);
+    }
+
+    .play-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--color-white);
+      fill: var(--color-white);
+      stroke-width: 0;
+    }
+
+    /* Mood Check-in */
+    .mood-faces {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mood-face {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .mood-face svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--color-charcoal);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .mood-face:hover {
+      transform: scale(1.1);
+    }
+
+    .mood-face.selected {
+      border-color: var(--color-primary-green);
+      box-shadow: 0 0 0 4px rgba(46, 107, 87, 0.2);
+    }
+
+    .mood-face:nth-child(1) { background: #FFE5E5; }
+    .mood-face:nth-child(2) { background: #FFE8CC; }
+    .mood-face:nth-child(3) { background: #FFF9E5; }
+    .mood-face:nth-child(4) { background: #E5F5E5; }
+    .mood-face:nth-child(5) { background: #E5F9F5; }
+
+    .mood-affirmation {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(168, 184, 159, 0.15);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--color-charcoal);
+      text-align: center;
+      display: none;
+    }
+
+    .mood-affirmation.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      padding: 24px 16px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-white);
+      transition: var(--transition);
+      box-shadow: 0 2px 12px var(--color-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px var(--color-shadow);
+    }
+
+    .action-btn.sos {
+      background: linear-gradient(135deg, var(--color-amber), #F5B88E);
+      animation: pulse 2s ease infinite;
+      grid-column: 1 / -1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 2px 12px var(--color-shadow), 0 0 0 0 rgba(232, 168, 124, 0.7); }
+      50% { box-shadow: 0 2px 12px var(--color-shadow), 0 0 0 8px rgba(232, 168, 124, 0); }
+    }
+
+    .action-btn.breathe {
+      background: linear-gradient(135deg, var(--color-calm-blue), #C5E1E5);
+    }
+
+    .action-btn.journal {
+      background: linear-gradient(135deg, var(--color-sand), #EFE0CE);
+      color: var(--color-charcoal);
+    }
+
+    .action-btn.soundscapes {
+      background: linear-gradient(135deg, var(--color-sage), #B8C4AD);
+    }
+
+    .action-btn-icon {
+      display: block;
+      margin-bottom: 8px;
+      width: 32px;
+      height: 32px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .action-btn-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .action-btn.sos .action-btn-icon svg {
+      animation: pulse-icon 2s ease infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Tasks */
+    .tasks-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+
+    .tasks-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .task-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--color-white);
+      border-radius: 24px;
+      border: 2px solid #E8E8E8;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .task-chip:hover {
+      border-color: var(--color-primary-green);
+    }
+
+    .task-chip.completed {
+      background: rgba(46, 107, 87, 0.1);
+      border-color: var(--color-primary-green);
+    }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #D0D0D0;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .task-chip.completed .task-checkbox {
+      background: var(--color-primary-green);
+      border-color: var(--color-primary-green);
+    }
+
+    .task-checkbox svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--color-white);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .task-chip.completed .task-checkbox svg {
+      opacity: 1;
+    }
+
+    /* Progress Bar */
+    .progress-section {
+      margin: 24px 0;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    .progress-percent {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-primary-green);
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #E8E8E8;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary-green), var(--color-sage));
+      border-radius: 20px;
+      transition: width 1s ease;
+    }
+
+    /* Session Reminder */
+    .session-reminder {
+      background: linear-gradient(135deg, rgba(168, 184, 159, 0.2), rgba(184, 212, 216, 0.2));
+      padding: 16px;
+      border-radius: var(--radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 2px solid rgba(168, 184, 159, 0.3);
+    }
+
+    .session-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .session-info p {
+      font-size: 13px;
+      color: var(--color-charcoal);
+      opacity: 0.8;
+    }
+
+    .session-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .session-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Page Title */
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--color-charcoal);
+    }
+
+    /* Therapy Cards */
+    .recommended-card {
+      background: linear-gradient(135deg, var(--color-primary-green), var(--color-sage));
+      color: var(--color-white);
+      padding: 24px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px var(--color-shadow);
+    }
+
+    .recommended-card h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .recommended-card p {
+      font-size: 14px;
+      opacity: 0.95;
+      margin-bottom: 16px;
+    }
+
+    .begin-btn {
+      background: var(--color-white);
+      color: var(--color-primary-green);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .begin-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .therapy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .therapy-card {
+      background: var(--color-white);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px var(--color-shadow);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .therapy-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px var(--color-shadow);
+    }
+
+    .therapy-card:nth-child(1) { border-top: 4px solid #B794F4; }
+    .therapy-card:nth-child(2) { border-top: 4px solid var(--color-calm-blue); }
+    .therapy-card:nth-child(3) { border-top: 4px solid var(--color-sage); }
+    .therapy-card:nth-child(4) { border-top: 4px solid var(--color-amber); }
+    .therapy-card:nth-child(5) { border-top: 4px solid var(--color-terracotta); }
+    .therapy-card:nth-child(6) { border-top: 4px solid var(--color-moss); }
+
+    .therapy-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 12px;
+      display: block;
+    }
+
+    .therapy-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .therapy-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-charcoal);
+    }
+
+    .therapy-desc {
+      font-size: 12px;
+      color: var(--color-charcoal);
+      opacity: 0.7;
+    }
+
+    /* Therapy Detail View */
+    .therapy-detail {
+      display: none;
+    }
+
+    .therapy-detail.active {
+      display: block;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--color-white);
+      border: 2px solid #E8E8E8;
+      padding: 10px 16px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      border-color: var(--color-primary-green);
+      background: rgba(46, 107, 87, 0.05);
+    }
+
+    .activities-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .activity-item {
+      background: var(--color-white);
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid #E8E8E8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .activity-item:hover {
+      border-color: var(--color-primary-green);
+      background: rgba(46, 107, 87, 0.03);
+    }
+
+    .activity-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    .activity-begin-btn {
+      background: var(--color-primary-green);
+      color: var(--color-white);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .activity-begin-btn:hover {
+      background: #26594A;
+      transform: scale(1.05);
+    }
+
+    /* Pod Card */
+    .pod-card {
+      background: linear-gradient(135deg, rgba(168, 184, 159, 0.2), rgba(184, 212, 216, 0.2));
+      padding: 24px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      border: 2px solid rgba(168, 184, 159, 0.3);
+    }
+
+    .pod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .pod-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--color-charcoal);
+    }
+
+    .pod-members {
+      font-size: 13px;
+      color: var(--color-charcoal);
+      opacity: 0.8;
+    }
+
+    .pod-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    .pod-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .pod-info {
+      margin-bottom: 16px;
+    }
+
+    .pod-info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .pod-btn {
+      background: var(--color-primary-green);
+      color: var(--color-white);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: var(--transition);
+    }
+
+    .pod-btn:hover {
+      background: #26594A;
+      transform: translateY(-2px);
+    }
+
+    /* Buddy Card */
+    .buddy-card {
+      background: var(--color-white);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px var(--color-shadow);
+    }
+
+    .buddy-header {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .buddy-avatar {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--color-calm-blue), #C5E1E5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .buddy-avatar svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--color-white);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .buddy-info h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .buddy-info p {
+      font-size: 13px;
+      color: var(--color-charcoal);
+      opacity: 0.7;
+    }
+
+    /* Library Categories */
+    .search-bar {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #E8E8E8;
+      border-radius: 24px;
+      font-size: 14px;
+      margin-bottom: 24px;
+      background: var(--color-white);
+      color: var(--color-charcoal);
+      transition: var(--transition);
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--color-primary-green);
+      box-shadow: 0 0 0 4px rgba(46, 107, 87, 0.1);
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .category-card {
+      background: var(--color-white);
+      padding: 24px 20px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 12px var(--color-shadow);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px var(--color-shadow);
+    }
+
+    .category-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 12px;
+      display: block;
+    }
+
+    .category-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .category-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--color-charcoal);
+    }
+
+    .category-count {
+      font-size: 13px;
+      color: var(--color-charcoal);
+      opacity: 0.6;
+    }
+
+    /* SOS Screen */
+    #sos-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--color-calm-blue);
+      z-index: 9998;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    #sos-screen.active {
+      display: flex;
+    }
+
+    .sos-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .sos-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 12px;
+    }
+
+    .sos-subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .breathing-circle {
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: breathe 14s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      28.6% { transform: scale(1.3); }
+      42.9% { transform: scale(1.3); }
+      71.4% { transform: scale(0.9); }
+      85.7% { transform: scale(0.9); }
+    }
+
+    .breathing-text {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--color-white);
+      margin-bottom: 48px;
+    }
+
+    .sos-actions {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sos-action-btn {
+      background: var(--color-white);
+      color: var(--color-charcoal);
+      border: none;
+      padding: 16px 24px;
+      border-radius: 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .sos-action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .close-sos-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .close-sos-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .close-sos-btn svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--color-white);
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-white);
+      box-shadow: 0 -2px 12px var(--color-shadow);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 20px;
+      transition: var(--transition);
+      color: var(--color-charcoal);
+      opacity: 0.5;
+    }
+
+    .nav-item.active {
+      color: var(--color-primary-green);
+      opacity: 1;
+    }
+
+    .nav-item:hover {
+      opacity: 0.8;
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Tap Counter */
+    .tap-counter {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(232, 168, 124, 0.95);
+      color: var(--color-white);
+      padding: 20px 32px;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      z-index: 10000;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .tap-counter.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 428px) {
+      .app-container {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div class="lotus-container">
+        <div class="lotus-icon">
+          <!-- Refined lotus: Simplified petal shapes -->
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3 Q9 6 9 10 Q9 13 12 14 Q15 13 15 10 Q15 6 12 3 Z"/>
+            <path d="M5 9 Q3 11 3 14 Q3 16 5 16 Q7 16 7 14 Q7 11 5 9 Z"/>
+            <path d="M19 9 Q21 11 21 14 Q21 16 19 16 Q17 16 17 14 Q17 11 19 9 Z"/>
+            <line x1="12" y1="14" x2="12" y2="21"/>
+          </svg>
+        </div>
+      </div>
+      <div class="app-name">SAGE</div>
+      <div class="app-tagline">Mental wellness for everyone</div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="user-info">
+        <div class="avatar">P</div>
+        <div class="greeting" id="greeting">Good evening, User</div>
+      </div>
+      <div class="settings-icon">
+        <!-- Settings: Simple circle with 6 short radiating lines -->
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <line x1="12" y1="2" x2="12" y2="6"/>
+          <line x1="12" y1="18" x2="12" y2="22"/>
+          <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
+          <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+          <line x1="2" y1="12" x2="6" y2="12"/>
+          <line x1="18" y1="12" x2="22" y2="12"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="content">
+      <!-- Diagnostic Hub Section -->
+      <div id="diagnostic-section" class="section">
+        <div id="assessment-list">
+          <h2 class="page-title">Diagnostic Hub</h2>
+          
+          <div class="card" style="margin-bottom: 16px;">
+            <div class="card-title">Self-Assessments</div>
+            <p style="font-size: 13px; color: var(--color-text-gray); margin: 0;">Take these assessments to understand your mental wellness better</p>
+          </div>
+
+          <div class="therapy-card" style="margin-bottom: 16px; text-align: left; border-top: 3px solid var(--color-primary-green);" data-assessment="phq9">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="therapy-name">PHQ-9: Depression Screening</div>
+                <div class="therapy-desc">5-7 minutes • 5 questions</div>
+              </div>
+              <button class="activity-begin-btn">Start</button>
+            </div>
+          </div>
+
+          <div class="therapy-card" style="margin-bottom: 16px; text-align: left; border-top: 3px solid var(--color-sage);" data-assessment="gad7">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="therapy-name">GAD-7: Anxiety Assessment</div>
+                <div class="therapy-desc">4-6 minutes • 5 questions</div>
+              </div>
+              <button class="activity-begin-btn">Start</button>
+            </div>
+          </div>
+
+          <div class="therapy-card" style="margin-bottom: 16px; text-align: left; border-top: 3px solid var(--color-moss);" data-assessment="sleep">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="therapy-name">Sleep Quality Index</div>
+                <div class="therapy-desc">3-5 minutes • 5 questions</div>
+              </div>
+              <button class="activity-begin-btn">Start</button>
+            </div>
+          </div>
+
+          <div class="therapy-card" style="margin-bottom: 16px; text-align: left; border-top: 3px solid var(--color-terracotta);" data-assessment="stress">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div class="therapy-name">Perceived Stress Scale</div>
+                <div class="therapy-desc">5-7 minutes • 5 questions</div>
+              </div>
+              <button class="activity-begin-btn">Start</button>
+            </div>
+          </div>
+
+          <div class="recommended-card" style="margin-top: 24px;" id="mind-profile-preview">
+            <h3>Your Mind Profile</h3>
+            <p>Complete assessments to view your comprehensive mind profile and therapy recommendations</p>
+            <div style="display: flex; gap: 12px; margin-top: 16px;">
+              <div style="flex: 1; text-align: center;">
+                <div style="font-size: 32px; font-weight: 600; margin-bottom: 4px;">--</div>
+                <div style="font-size: 12px; opacity: 0.9;">Wellbeing Score</div>
+              </div>
+              <div style="flex: 1; text-align: center;">
+                <div style="font-size: 32px; font-weight: 600; margin-bottom: 4px;">--</div>
+                <div style="font-size: 12px; opacity: 0.9;">Depression Level</div>
+              </div>
+              <div style="flex: 1; text-align: center;">
+                <div style="font-size: 32px; font-weight: 600; margin-bottom: 4px;">--</div>
+                <div style="font-size: 12px; opacity: 0.9;">Anxiety Level</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assessment Taking Screen -->
+        <div id="assessment-screen" style="display: none;">
+          <button class="back-btn" id="exit-assessment">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18 L9 12 L15 6"/>
+            </svg>
+            Save &amp; Exit
+          </button>
+          <h2 class="page-title" id="assessment-title"></h2>
+          <div class="progress-bar" style="margin-bottom: 32px;">
+            <div class="progress-fill" id="assessment-progress" style="width: 0%;"></div>
+          </div>
+          <div id="question-container"></div>
+        </div>
+
+        <!-- Mind Profile Report -->
+        <div id="mind-profile-report" style="display: none;">
+          <button class="back-btn" id="back-to-assessments">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18 L9 12 L15 6"/>
+            </svg>
+            Back
+          </button>
+          <h2 class="page-title">Your Mind Profile</h2>
+          
+          <div class="profile-score">
+            <div class="score-circle">
+              <div class="score-number">72</div>
+              <div class="score-label">Wellbeing Score</div>
+            </div>
+            <p style="font-size: 14px; color: var(--color-text-gray);">You're doing well overall with some areas to focus on</p>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Risk Assessment</div>
+            <div class="risk-bar">
+              <div class="risk-label">
+                <span>Depression</span>
+                <span style="color: var(--color-sage);">Low</span>
+              </div>
+              <div class="risk-level">
+                <div class="risk-fill low" style="width: 25%;"></div>
+              </div>
+            </div>
+            <div class="risk-bar">
+              <div class="risk-label">
+                <span>Anxiety</span>
+                <span style="color: var(--color-amber);">Moderate</span>
+              </div>
+              <div class="risk-level">
+                <div class="risk-fill moderate" style="width: 55%;"></div>
+              </div>
+            </div>
+            <div class="risk-bar">
+              <div class="risk-label">
+                <span>Stress</span>
+                <span style="color: var(--color-amber);">Moderate</span>
+              </div>
+              <div class="risk-level">
+                <div class="risk-fill moderate" style="width: 60%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="recommended-card">
+            <h3>Your Personalized Weekly Schedule</h3>
+            <p style="margin-bottom: 20px;">Based on your profile, we've created a therapy plan for you</p>
+            <div id="schedule-preview"></div>
+            <button class="begin-btn" style="margin-top: 16px;" id="view-full-schedule">View Full Schedule</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home Section -->
+      <div id="home-section" class="section active">
+        <!-- Mood Check-in -->
+        <div class="card">
+          <div class="card-title">How are you feeling today?</div>
+          <div class="mood-faces">
+            <!-- Struggling: ultra-minimal, abstract face -->
+            <div class="mood-face" data-mood="terrible" title="Struggling">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="9" y1="9" x2="10" y2="8"/>
+                <line x1="15" y1="8" x2="16" y2="9"/>
+                <path d="M8 16 Q12 13 16 16"/>
+              </svg>
+            </div>
+            <!-- Sad: circle + dots + gentle down arc -->
+            <div class="mood-face" data-mood="not-great" title="Sad">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="9" cy="10" r="1"/>
+                <circle cx="15" cy="10" r="1"/>
+                <path d="M9 15 Q12 13 15 15"/>
+              </svg>
+            </div>
+            <!-- Neutral: circle + dots + straight line -->
+            <div class="mood-face" data-mood="okay" title="Neutral">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="9" cy="10" r="1"/>
+                <circle cx="15" cy="10" r="1"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <!-- Happy: circle + dots + smile arc -->
+            <div class="mood-face" data-mood="good" title="Happy">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="9" cy="10" r="1"/>
+                <circle cx="15" cy="10" r="1"/>
+                <path d="M9 15 Q12 17 15 15"/>
+              </svg>
+            </div>
+            <!-- Very Happy: circle + short upward curves for eyes + gentle arc smile -->
+            <div class="mood-face" data-mood="great" title="Very Happy">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M10 10 Q11 9 12 10"/>
+                <path d="M14 10 Q13 9 12 10"/>
+                <path d="M9 15 Q12 18 15 15"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mood-affirmation" id="mood-affirmation"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button class="action-btn sos" id="sos-btn">
+            <span class="action-btn-icon">
+              <!-- SOS: Simple circle with centered dot (beacon/signal) -->
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="2" fill="currentColor"/>
+              </svg>
+            </span>
+            I Need Help
+          </button>
+          <button class="action-btn breathe">
+            <span class="action-btn-icon">
+              <!-- Breathe: Concentric circles suggesting expansion -->
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"/>
+                <circle cx="12" cy="12" r="7"/>
+                <circle cx="12" cy="12" r="10"/>
+              </svg>
+            </span>
+            Breathe
+          </button>
+          <button class="action-btn journal">
+            <span class="action-btn-icon">
+              <!-- Journal: Single line forming open book shape -->
+              <svg viewBox="0 0 24 24">
+                <path d="M4 4 L12 4 L12 20 L4 20 Z"/>
+                <path d="M12 4 L20 4 L20 20 L12 20"/>
+                <line x1="12" y1="4" x2="12" y2="20"/>
+              </svg>
+            </span>
+            Journal
+          </button>
+          <button class="action-btn soundscapes">
+            <span class="action-btn-icon">
+              <!-- Soundscapes: Three vertical lines of varying heights (equalizer) -->
+              <svg viewBox="0 0 24 24">
+                <line x1="7" y1="8" x2="7" y2="16"/>
+                <line x1="12" y1="4" x2="12" y2="20"/>
+                <line x1="17" y1="10" x2="17" y2="14"/>
+              </svg>
+            </span>
+            Soundscapes
+          </button>
+        </div>
+
+        <!-- Today's Tasks -->
+        <div class="card">
+          <div class="card-title">Today's tasks</div>
+          <div class="tasks-scroll">
+            <div class="task-chip" data-task="meditation">
+              <div class="task-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <span>Morning meditation</span>
+            </div>
+            <div class="task-chip" data-task="journal">
+              <div class="task-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <span>Write journal entry</span>
+            </div>
+            <div class="task-chip" data-task="breathing">
+              <div class="task-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <span>Breathing exercise</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section">
+          <div class="progress-header">
+            <div class="progress-title">Your Therapy Journey</div>
+            <div class="progress-percent">65%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 65%;"></div>
+          </div>
+        </div>
+
+        <!-- Session Reminder -->
+        <div class="session-reminder">
+          <div class="session-info">
+            <h4>Next Pod Session</h4>
+            <p>Tomorrow at 4:00 PM</p>
+          </div>
+          <div class="session-icon">
+            <!-- Calendar: Ultra-minimal -->
+            <svg viewBox="0 0 24 24">
+              <rect x="4" y="5" width="16" height="16" rx="2"/>
+              <line x1="4" y1="10" x2="20" y2="10"/>
+              <line x1="9" y1="3" x2="9" y2="7"/>
+              <line x1="15" y1="3" x2="15" y2="7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Therapy Section -->
+      <div id="therapy-section" class="section">
+        <div id="therapy-overview">
+          <h2 class="page-title">Your Therapy Pathways</h2>
+          
+          <div class="card" id="weekly-schedule-card" style="display: none; margin-bottom: 20px;">
+            <div class="card-title">Your Weekly Schedule</div>
+            <p style="font-size: 13px; color: var(--color-text-gray); margin-bottom: 16px;">Your personalized therapy plan based on your Mind Profile</p>
+            <div id="schedule-list"></div>
+            <button class="begin-btn" style="width: 100%; margin-top: 16px;" onclick="alert('Schedule customization coming soon!')">Customize Schedule</button>
+          </div>
+
+          <div class="recommended-card">
+            <h3>Recommended for you</h3>
+            <p>Art Therapy - Creative healing through expression</p>
+            <button class="begin-btn">Begin Journey</button>
+          </div>
+
+          <div class="therapy-grid" id="therapy-grid"></div>
+        </div>
+
+        <div id="therapy-detail" class="therapy-detail">
+          <button class="back-btn" id="back-to-therapy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18 L9 12 L15 6"/>
+            </svg>
+            Back
+          </button>
+          <h2 class="page-title" id="therapy-detail-title"></h2>
+          
+          <div class="tabs" id="therapy-tabs">
+            <button class="tab active" data-tab="activities">Activities</button>
+            <button class="tab" data-tab="nearme">Near Me</button>
+          </div>
+
+          <div id="tab-activities" class="tab-content">
+            <div class="activities-list" id="activities-list"></div>
+          </div>
+
+          <div id="tab-nearme" class="tab-content" style="display: none;">
+            <div class="filter-tags">
+              <div class="filter-tag active">All</div>
+              <div class="filter-tag">Available Now</div>
+              <div class="filter-tag">Today</div>
+              <div class="filter-tag">This Week</div>
+            </div>
+            <div id="nearme-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pods Section -->
+      <div id="pods-section" class="section">
+        <h2 class="page-title">Your Support Pod</h2>
+        
+        <div class="pod-card">
+          <div class="pod-header">
+            <div>
+              <div class="pod-name">Morning Light Pod</div>
+              <div class="pod-members">12 members</div>
+            </div>
+            <div class="pod-icon">
+              <!-- Sun icon simplified -->
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4"/>
+                <line x1="12" y1="2" x2="12" y2="6"/>
+                <line x1="12" y1="18" x2="12" y2="22"/>
+                <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
+                <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+                <line x1="2" y1="12" x2="6" y2="12"/>
+                <line x1="18" y1="12" x2="22" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="pod-info">
+            <div class="pod-info-item">
+              <svg style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M6 20 Q12 16 18 20"/></svg>
+              <span>Facilitator: Dr. Meera Sharma</span>
+            </div>
+            <div class="pod-info-item">
+              <svg style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="3" x2="9" y2="7"/><line x1="15" y1="3" x2="15" y2="7"/></svg>
+              <span>Next session: Tomorrow, 4:00 PM</span>
+            </div>
+            <div class="pod-info-item">
+              <svg style="width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+              <span>Focus: Stress &amp; Anxiety Management</span>
+            </div>
+          </div>
+          <button class="pod-btn">Enter Pod Space</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Your Buddy</div>
+          <div class="buddy-header">
+            <div class="buddy-avatar">
+              <!-- User icon simplified -->
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M6 20 Q12 16 18 20"/>
+              </svg>
+            </div>
+            <div class="buddy-info">
+              <h4>Anonymous User #4821</h4>
+              <p>Joined 3 weeks ago • Similar goals</p>
+            </div>
+          </div>
+          <button class="pod-btn">Send Check-In Message</button>
+        </div>
+      </div>
+
+      <!-- Library Section -->
+      <div id="library-section" class="section">
+        <h2 class="page-title">Wellness Library</h2>
+        
+        <input type="text" class="search-bar" placeholder="Search articles, topics...">
+
+        <div class="library-grid">
+          <!-- Stress: Three balanced horizontal lines (decreasing length) -->
+          <div class="category-card">
+            <span class="category-icon">
+              <svg viewBox="0 0 24 24">
+                <line x1="4" y1="8" x2="20" y2="8"/>
+                <line x1="6" y1="12" x2="18" y2="12"/>
+                <line x1="8" y1="16" x2="16" y2="16"/>
+              </svg>
+            </span>
+            <div class="category-name">Stress</div>
+            <div class="category-count">28 articles</div>
+          </div>
+          <!-- Sleep: Simple crescent moon -->
+          <div class="category-card">
+            <span class="category-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 12.79 A9 9 0 1 1 11.21 3 A7 7 0 0 0 21 12.79 Z"/>
+              </svg>
+            </span>
+            <div class="category-name">Sleep</div>
+            <div class="category-count">22 articles</div>
+          </div>
+          <!-- Relationships: Two overlapping circles -->
+          <div class="category-card">
+            <span class="category-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="9" cy="12" r="5"/>
+                <circle cx="15" cy="12" r="5"/>
+              </svg>
+            </span>
+            <div class="category-name">Relationships</div>
+            <div class="category-count">31 articles</div>
+          </div>
+          <!-- Anxiety: Circle with protective arch above -->
+          <div class="category-card">
+            <span class="category-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="14" r="6"/>
+                <path d="M6 8 Q12 3 18 8"/>
+              </svg>
+            </span>
+            <div class="category-name">Anxiety</div>
+            <div class="category-count">35 articles</div>
+          </div>
+          <!-- Workplace: Rectangle with triangle roof (minimal house) -->
+          <div class="category-card">
+            <span class="category-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 12 L12 5 L20 12 L20 20 L4 20 Z"/>
+              </svg>
+            </span>
+            <div class="category-name">Workplace</div>
+            <div class="category-count">19 articles</div>
+          </div>
+          <!-- Emotions: Heart outline (ultra-thin) -->
+          <div class="category-card">
+            <span class="category-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M20.84 4.61 A5.5 5.5 0 0 0 13.06 4.61 L12 5.67 L10.94 4.61 A5.5 5.5 0 0 0 3.16 12.39 L12 21.23 L20.84 12.39 A5.5 5.5 0 0 0 20.84 4.61 Z"/>
+              </svg>
+            </span>
+            <div class="category-name">Emotions</div>
+            <div class="category-count">26 articles</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOS Screen -->
+    <div id="sos-screen">
+      <button class="close-sos-btn" id="close-sos">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="sos-header">
+        <div class="sos-title">You're safe.</div>
+        <div class="sos-subtitle">Help is here.</div>
+      </div>
+      <div class="breathing-circle"></div>
+      <div class="breathing-text" id="breathing-text">Breathe in...</div>
+      <div class="sos-actions">
+        <button class="sos-action-btn">Contact Facilitator</button>
+        <button class="sos-action-btn">Message Buddy</button>
+        <button class="sos-action-btn" id="view-helplines-btn">View Helplines</button>
+      </div>
+    </div>
+
+    <!-- Helplines Modal -->
+    <div id="helplines-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+      <div style="background: var(--color-white); max-width: 380px; width: 90%; border-radius: var(--radius); padding: 24px; max-height: 80vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="font-size: 20px; font-weight: 600; margin: 0;">Crisis Helplines</h3>
+          <button id="close-helplines" style="width: 32px; height: 32px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div id="helplines-list"></div>
+      </div>
+    </div>
+
+    <!-- Tap Counter -->
+    <div class="tap-counter" id="tap-counter"></div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <!-- Diagnostic: Clipboard icon -->
+      <div class="nav-item" data-section="diagnostic">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <rect x="7" y="3" width="10" height="18" rx="2"/>
+          <line x1="10" y1="8" x2="17" y2="8"/>
+          <line x1="10" y1="12" x2="17" y2="12"/>
+          <line x1="10" y1="16" x2="14" y2="16"/>
+        </svg>
+        <div class="nav-label">Diagnostic</div>
+      </div>
+      <!-- Home: Square with triangle roof (simplest house form) -->
+      <div class="nav-item active" data-section="home">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M5 12 L12 5 L19 12 L19 20 L5 20 Z"/>
+        </svg>
+        <div class="nav-label">Home</div>
+      </div>
+      <!-- Therapy: Single leaf/sprout -->
+      <div class="nav-item" data-section="therapy">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M12 20 L12 8 Q12 4 8 4 Q12 8 12 8 Q12 4 16 4 Q12 8 12 8"/>
+        </svg>
+        <div class="nav-label">Therapy</div>
+      </div>
+      <!-- Pods: Three circles arranged in triangle -->
+      <div class="nav-item" data-section="pods">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="3"/>
+          <circle cx="7" cy="16" r="3"/>
+          <circle cx="17" cy="16" r="3"/>
+        </svg>
+        <div class="nav-label">Pods</div>
+      </div>
+      <!-- Library: Two rectangles stacked (book spines) -->
+      <div class="nav-item" data-section="library">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <rect x="5" y="4" width="6" height="16" rx="1"/>
+          <rect x="13" y="4" width="6" height="16" rx="1"/>
+        </svg>
+        <div class="nav-label">Library</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // App State
+    const appState = {
+      currentSection: 'home',
+      therapyDetailActive: false,
+      selectedTherapy: null,
+      therapySubView: null, // 'activities', 'nearme', 'schedule'
+      sosTapCount: 0,
+      sosTapTimeout: null,
+      selectedMood: null,
+      name: 'User',
+      moods: [],
+      tasks: [{ meditation: false, journal: false, breathing: false }],
+      journal: '',
+      libraryBookmarks: [],
+      assessmentActive: false,
+      currentAssessment: null,
+      currentQuestion: 0,
+      assessmentAnswers: [],
+      completedAssessments: [],
+      showMindProfile: false,
+      scheduleGenerated: false
+    };
+
+    // Therapy Data with SVG icons
+    const therapyData = [
+      {
+        name: 'Art Therapy',
+        desc: 'Creative healing through expression',
+        icon: `<svg viewBox="0 0 24 24">
+          <ellipse cx="12" cy="14" rx="6" ry="4"/>
+          <circle cx="9" cy="14" r="1.5"/>
+          <circle cx="15" cy="14" r="0.6"/>
+          <path d="M12 14 Q13 13 14 13"/>
+        </svg>`,
+        activities: [
+          'Calming Gallery', 'Guided Art Exercises', 'Mandala Coloring', 'Expression Exercises'
+        ]
+      },
+      {
+        name: 'Sound Therapy',
+        desc: 'Soothing frequencies and sleep sounds',
+        icon: `<svg viewBox="0 0 24 24">
+          <polyline points="4 15 8 15 14 8 20 8"/>
+          <line x1="4" y1="19" x2="20" y2="5"/>
+        </svg>`,
+        activities: [
+          'Nature Sounds', 'Soft Instrumental Playlist', 'Sleep Sounds Playlist', 'Brown Noise'
+        ]
+      },
+      {
+        name: 'Meditation Studio',
+        desc: 'Mindful, guided meditation &amp; breathing',
+        icon: `<svg viewBox="0 0 24 24">
+          <ellipse cx="12" cy="18" rx="7" ry="2.5"/>
+          <circle cx="12" cy="9.5" r="6"/>
+        </svg>`,
+        activities: [
+          'Box Breathing', '4-7-8 Breathing', 'Physiological Sigh', 'Guided Visualizations'
+        ]
+      },
+      {
+        name: 'CBT/DBT Lessons',
+        desc: 'Micro-lessons and thought tools',
+        icon: `<svg viewBox="0 0 24 24">
+          <rect x="4" y="6" width="16" height="12" rx="5"/>
+          <line x1="12" y1="9" x2="12" y2="15"/>
+        </svg>`,
+        activities: [
+          'Micro-Lessons', 'Thought Reframing Tool', 'Coping Skills', 'Behavioral Notes'
+        ]
+      },
+      {
+        name: 'Breathing Exercises',
+        desc: 'Quick relief with calming breath',
+        icon: `<svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="7"/>
+          <path d="M8 15 Q12 8 16 15"/>
+        </svg>`,
+        activities: [
+          'Box Breathing', '4-7-8', 'Physiological Sigh', 'Alternate Nostril'
+        ]
+      },
+      {
+        name: 'Journaling',
+        desc: 'Write, reflect, gratitude and more',
+        icon: `<svg viewBox="0 0 24 24">
+          <rect x="5" y="4" width="14" height="16" rx="3"/>
+          <line x1="7" y1="8" x2="17" y2="8"/>
+          <line x1="7" y1="12" x2="17" y2="12"/>
+        </svg>`,
+        activities: [
+          'Daily Prompts', 'Free-Write', 'Gratitude', 'Entry History'
+        ]
+      }
+    ];
+
+    // Nearby Services Data
+    const nearbyServices = {
+      'Art Therapy': [
+        { name: 'Mindful Arts Studio', distance: '1.2 km', available: 'Now', rating: 4.8, price: '₹800/session' },
+        { name: 'Creative Healing Center', distance: '2.5 km', available: 'Today 4 PM', rating: 4.9, price: '₹1200/session' },
+        { name: 'Art & Soul Therapy', distance: '3.8 km', available: 'Tomorrow', rating: 4.7, price: '₹600/session' }
+      ],
+      'Sound Therapy': [
+        { name: 'Sound Bath Sanctuary', distance: '1.8 km', available: 'Today 6 PM', rating: 4.9, price: '₹500/session' },
+        { name: 'Healing Frequencies', distance: '4.2 km', available: 'This Week', rating: 4.6, price: '₹700/session' }
+      ]
+    };
+
+    // Weekly Schedule Data
+    const weeklySchedule = [
+      { day: 'Monday', activity: 'Art Therapy (self-guided)', time: '7:00 PM' },
+      { day: 'Tuesday', activity: 'Breathing &amp; Grounding', time: '9:00 AM' },
+      { day: 'Wednesday', activity: 'Group Pod Session', time: '6:00 PM' },
+      { day: 'Thursday', activity: 'Journaling Practice', time: '8:00 AM' },
+      { day: 'Friday', activity: 'Book Therapist (suggested)', time: '11:00 AM' },
+      { day: 'Saturday', activity: 'Sound Therapy', time: '10:00 AM' },
+      { day: 'Sunday', activity: 'Rest Day - Mood tracking only', time: '' }
+    ];
+
+    // Assessment Questions
+    const assessments = {
+      phq9: {
+        name: 'PHQ-9: Depression Screening',
+        questions: [
+          { q: 'Over the past 2 weeks, how often have you felt little interest or pleasure in doing things?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you felt down, depressed, or hopeless?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you had trouble falling or staying asleep, or sleeping too much?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you felt tired or had little energy?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you had poor appetite or been overeating?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] }
+        ]
+      },
+      gad7: {
+        name: 'GAD-7: Anxiety Assessment',
+        questions: [
+          { q: 'Over the past 2 weeks, how often have you felt nervous, anxious, or on edge?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you been unable to stop or control worrying?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you worried too much about different things?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you had trouble relaxing?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] },
+          { q: 'How often have you felt so restless that it is hard to sit still?', options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'] }
+        ]
+      },
+      sleep: {
+        name: 'Sleep Quality Index',
+        questions: [
+          { q: 'How would you rate your overall sleep quality?', options: ['Very poor', 'Poor', 'Fair', 'Good', 'Very good'] },
+          { q: 'How often do you have trouble falling asleep?', options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'] },
+          { q: 'How often do you wake up during the night?', options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'] },
+          { q: 'Do you feel rested when you wake up?', options: ['Always', 'Often', 'Sometimes', 'Rarely', 'Never'] },
+          { q: 'How many hours of sleep do you typically get?', options: ['Less than 4', '4-5 hours', '6-7 hours', '7-8 hours', 'More than 8'] }
+        ]
+      },
+      stress: {
+        name: 'Perceived Stress Scale',
+        questions: [
+          { q: 'In the past month, how often have you felt unable to control important things in your life?', options: ['Never', 'Almost never', 'Sometimes', 'Fairly often', 'Very often'] },
+          { q: 'How often have you felt confident about your ability to handle personal problems?', options: ['Never', 'Almost never', 'Sometimes', 'Fairly often', 'Very often'] },
+          { q: 'How often have you felt that things were going your way?', options: ['Never', 'Almost never', 'Sometimes', 'Fairly often', 'Very often'] },
+          { q: 'How often have you felt difficulties were piling up so high that you could not overcome them?', options: ['Never', 'Almost never', 'Sometimes', 'Fairly often', 'Very often'] },
+          { q: 'How often have you been upset because of something that happened unexpectedly?', options: ['Never', 'Almost never', 'Sometimes', 'Fairly often', 'Very often'] }
+        ]
+      }
+    };
+
+    // Crisis Helplines
+    const helplines = [
+      { name: 'AASRA', number: '91-9820466726', availability: '24/7' },
+      { name: 'Vandrevala Foundation', number: '1860-2662-345', availability: '24/7' },
+      { name: 'iCall', number: '022-25521111', availability: 'Mon-Sat, 8AM-10PM' },
+      { name: 'Emergency Services', number: '112', availability: '24/7' }
+    ];
+
+    // All mood affirmations
+    const moodAffirmations = {
+      'terrible': "I see you're struggling. Remember, it's okay to not be okay. Let's take this one step at a time.",
+      'not-great': "Tough days happen. You're doing your best, and that's enough. Be gentle with yourself.",
+      'okay': "You're holding steady. That takes strength. Keep going, one moment at a time.",
+      'good': "That's wonderful! Keep nurturing this positive energy. You're doing great.",
+      'great': "Beautiful! Your joy is contagious. Celebrate this moment and carry it forward."
+    };
+
+    // Initialize App
+    function initApp() {
+      // Try to load from localStorage, but use in-memory if blocked
+      // All state in JS memory - persistent state is not supported in this environment
+      // No localStorage or cookies allowed
+      // In production: replace with real storage if supported
+
+      // Hide loading screen after 2.5 seconds
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+      }, 2500);
+
+      // Set greeting based on time
+      setGreeting();
+
+      // Render therapy cards
+      renderTherapyCards();
+
+      // Setup event listeners
+      setupEventListeners();
+
+      // Start breathing animation cycle
+      startBreathingCycle();
+    }
+
+    // Set greeting based on time of day
+    function setGreeting() {
+      const hour = new Date().getHours();
+      let greeting = 'Good evening';
+      
+      if (hour < 12) {
+        greeting = 'Good morning';
+      } else if (hour < 17) {
+        greeting = 'Good afternoon';
+      }
+      
+      document.getElementById('greeting').textContent = `${greeting}, ${appState.name}`;
+    }
+
+    // Render therapy cards
+    function renderTherapyCards() {
+      const grid = document.getElementById('therapy-grid');
+      grid.innerHTML = therapyData.map((therapy, index) => `
+        <div class="therapy-card" data-therapy-index="${index}">
+          <span class="therapy-icon">${therapy.icon}</span>
+          <div class="therapy-name">${therapy.name}</div>
+          <div class="therapy-desc">${therapy.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    // Show therapy detail
+    function showTherapyDetail(index) {
+      const therapy = therapyData[index];
+      appState.selectedTherapy = therapy;
+      appState.therapyDetailActive = true;
+      appState.therapySubView = 'activities';
+
+      document.getElementById('therapy-detail-title').textContent = therapy.name;
+      document.getElementById('activities-list').innerHTML = therapy.activities.map(activity => `
+        <div class="activity-item">
+          <div class="activity-name">${activity}</div>
+          <button class="activity-begin-btn">Begin</button>
+        </div>
+      `).join('');
+
+      // Render near me services if available
+      renderNearMeServices(therapy.name);
+
+      document.getElementById('therapy-overview').style.display = 'none';
+      document.getElementById('therapy-detail').classList.add('active');
+    }
+
+    // Render near me services
+    function renderNearMeServices(therapyName) {
+      const services = nearbyServices[therapyName];
+      const nearmeList = document.getElementById('nearme-list');
+      
+      if (!services || services.length === 0) {
+        nearmeList.innerHTML = '<p style="text-align: center; color: var(--color-text-gray); padding: 40px 0;">No nearby services available for this therapy type yet.</p>';
+        return;
+      }
+
+      nearmeList.innerHTML = services.map(service => `
+        <div class="location-card">
+          <div class="location-header">
+            <div class="location-name">${service.name}</div>
+            <div class="availability-badge ${service.available === 'Now' ? 'now' : ''}">${service.available}</div>
+          </div>
+          <div class="location-details">
+            <div class="location-detail">
+              <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+                <path d="M21 10 C21 17 12 23 12 23 S3 17 3 10 A9 9 0 0 1 21 10 Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>${service.distance}</span>
+            </div>
+            <div class="location-detail">
+              <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span>${service.rating}</span>
+            </div>
+            <div class="location-detail">
+              <span>${service.price}</span>
+            </div>
+          </div>
+          <button class="book-session-btn">Book Session</button>
+        </div>
+      `).join('');
+    }
+
+    // Start Assessment
+    function startAssessment(assessmentId) {
+      const assessment = assessments[assessmentId];
+      if (!assessment) return;
+
+      appState.assessmentActive = true;
+      appState.currentAssessment = assessmentId;
+      appState.currentQuestion = 0;
+      appState.assessmentAnswers = [];
+
+      document.getElementById('assessment-list').style.display = 'none';
+      document.getElementById('assessment-screen').style.display = 'block';
+      document.getElementById('assessment-title').textContent = assessment.name;
+
+      renderQuestion();
+    }
+
+    // Render current question
+    function renderQuestion() {
+      const assessment = assessments[appState.currentAssessment];
+      const question = assessment.questions[appState.currentQuestion];
+      const progress = ((appState.currentQuestion + 1) / assessment.questions.length) * 100;
+
+      document.getElementById('assessment-progress').style.width = progress + '%';
+
+      const questionContainer = document.getElementById('question-container');
+      questionContainer.innerHTML = `
+        <div class="assessment-question">
+          <div class="question-number">Question ${appState.currentQuestion + 1} of ${assessment.questions.length}</div>
+          <div class="question-text">${question.q}</div>
+          <div class="answer-options">
+            ${question.options.map((option, idx) => `
+              <div class="answer-option" data-answer="${idx}">${option}</div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="assessment-nav">
+          <button class="assessment-btn secondary" id="prev-question" ${appState.currentQuestion === 0 ? 'disabled' : ''}>Previous</button>
+          <button class="assessment-btn primary" id="next-question" disabled>Next</button>
+        </div>
+      `;
+
+      // Attach answer selection listeners
+      document.querySelectorAll('.answer-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.answer-option').forEach(o => o.classList.remove('selected'));
+          this.classList.add('selected');
+          const answer = parseInt(this.dataset.answer);
+          appState.assessmentAnswers[appState.currentQuestion] = answer;
+          document.getElementById('next-question').disabled = false;
+        });
+      });
+
+      // Pre-select if answer exists
+      if (appState.assessmentAnswers[appState.currentQuestion] !== undefined) {
+        const selectedIdx = appState.assessmentAnswers[appState.currentQuestion];
+        document.querySelector(`[data-answer="${selectedIdx}"]`).classList.add('selected');
+        document.getElementById('next-question').disabled = false;
+      }
+
+      // Navigation
+      document.getElementById('prev-question').addEventListener('click', () => {
+        if (appState.currentQuestion > 0) {
+          appState.currentQuestion--;
+          renderQuestion();
+        }
+      });
+
+      document.getElementById('next-question').addEventListener('click', () => {
+        if (appState.currentQuestion < assessment.questions.length - 1) {
+          appState.currentQuestion++;
+          renderQuestion();
+        } else {
+          completeAssessment();
+        }
+      });
+    }
+
+    // Complete Assessment
+    function completeAssessment() {
+      appState.completedAssessments.push(appState.currentAssessment);
+      appState.assessmentActive = false;
+      
+      // Show Mind Profile after first assessment
+      showMindProfile();
+    }
+
+    // Show Mind Profile
+    function showMindProfile() {
+      appState.showMindProfile = true;
+      document.getElementById('assessment-screen').style.display = 'none';
+      document.getElementById('mind-profile-report').style.display = 'block';
+      
+      // Generate schedule preview
+      renderSchedulePreview();
+    }
+
+    // Render schedule preview in Mind Profile
+    function renderSchedulePreview() {
+      const schedulePreview = document.getElementById('schedule-preview');
+      schedulePreview.innerHTML = weeklySchedule.slice(0, 3).map(day => `
+        <div class="schedule-card" style="margin-bottom: 8px;">
+          <div class="schedule-day">${day.day}</div>
+          <div class="schedule-activity">${day.activity}</div>
+          <div class="schedule-time">${day.time}</div>
+        </div>
+      `).join('');
+      schedulePreview.innerHTML += '<p style="text-align: center; color: var(--color-text-gray); font-size: 13px; margin-top: 12px;">+ 4 more days</p>';
+    }
+
+    // Show full schedule in therapy section
+    function showFullSchedule() {
+      appState.scheduleGenerated = true;
+      switchSection('therapy');
+      
+      const scheduleCard = document.getElementById('weekly-schedule-card');
+      scheduleCard.style.display = 'block';
+      
+      const scheduleList = document.getElementById('schedule-list');
+      scheduleList.innerHTML = weeklySchedule.map(day => `
+        <div class="schedule-card">
+          <div class="schedule-day">${day.day}</div>
+          <div class="schedule-activity">${day.activity}</div>
+          <div class="schedule-time">${day.time}</div>
+        </div>
+      `).join('');
+    }
+
+    // Show helplines
+    function showHelplines() {
+      const modal = document.getElementById('helplines-modal');
+      modal.style.display = 'flex';
+      
+      const helplinesList = document.getElementById('helplines-list');
+      helplinesList.innerHTML = helplines.map(helpline => `
+        <div class="location-card" style="margin-bottom: 12px;">
+          <div class="location-name" style="margin-bottom: 8px;">${helpline.name}</div>
+          <div style="font-size: 13px; color: var(--color-text-gray); margin-bottom: 12px;">${helpline.availability}</div>
+          <a href="tel:${helpline.number}" class="book-session-btn" style="text-decoration: none; display: block; text-align: center;">Call ${helpline.number}</a>
+        </div>
+      `).join('');
+    }
+
+    // Hide therapy detail
+    function hideTherapyDetail() {
+      appState.therapyDetailActive = false;
+      appState.selectedTherapy = null;
+      document.getElementById('therapy-overview').style.display = 'block';
+      document.getElementById('therapy-detail').classList.remove('active');
+    }
+
+    // Switch section
+    function switchSection(sectionName) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Show selected section
+      document.getElementById(`${sectionName}-section`).classList.add('active');
+
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+      // Reset therapy detail if switching away from therapy
+      if (sectionName !== 'therapy' && appState.therapyDetailActive) {
+        hideTherapyDetail();
+      }
+
+      appState.currentSection = sectionName;
+    }
+
+    // Handle SOS button
+    function handleSOSTap() {
+      appState.sosTapCount++;
+      
+      // Clear existing timeout
+      if (appState.sosTapTimeout) {
+        clearTimeout(appState.sosTapTimeout);
+      }
+
+      // Show tap counter
+      const tapCounter = document.getElementById('tap-counter');
+      if (appState.sosTapCount === 1) {
+        tapCounter.textContent = 'Press 2 more times';
+      } else if (appState.sosTapCount === 2) {
+        tapCounter.textContent = 'Press 1 more time';
+      }
+      tapCounter.classList.add('show');
+
+      // Hide tap counter after 0.5s
+      setTimeout(() => {
+        tapCounter.classList.remove('show');
+      }, 500);
+
+      // Activate SOS if 3 taps
+      if (appState.sosTapCount >= 3) {
+        activateSOS();
+        appState.sosTapCount = 0;
+        return;
+      }
+
+      // Reset counter after 2 seconds
+      appState.sosTapTimeout = setTimeout(() => {
+        appState.sosTapCount = 0;
+      }, 2000);
+    }
+
+    // Activate SOS screen
+    function activateSOS() {
+      document.getElementById('sos-screen').classList.add('active');
+    }
+
+    // Close SOS screen
+    function closeSOS() {
+      document.getElementById('sos-screen').classList.remove('active');
+    }
+
+    // Breathing cycle for SOS screen
+    function startBreathingCycle() {
+      const breathingStates = [
+        { text: 'Breathe in...', duration: 4000 },
+        { text: 'Hold...', duration: 2000 },
+        { text: 'Breathe out...', duration: 6000 },
+        { text: 'Hold...', duration: 2000 }
+      ];
+      
+      let currentIndex = 0;
+      
+      function updateBreathingText() {
+        const breathingText = document.getElementById('breathing-text');
+        if (breathingText) {
+          breathingText.textContent = breathingStates[currentIndex].text;
+          currentIndex = (currentIndex + 1) % breathingStates.length;
+          setTimeout(updateBreathingText, breathingStates[(currentIndex - 1 + breathingStates.length) % breathingStates.length].duration);
+        }
+      }
+      
+      updateBreathingText();
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Bottom navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const section = item.dataset.section;
+          switchSection(section);
+        });
+      });
+
+      // Mood faces
+      document.querySelectorAll('.mood-face').forEach(face => {
+        face.addEventListener('click', () => {
+          // Remove previous selection
+          document.querySelectorAll('.mood-face').forEach(f => f.classList.remove('selected'));
+          
+          // Select current mood
+          face.classList.add('selected');
+          const mood = face.dataset.mood;
+          appState.selectedMood = mood;
+          appState.moods.push({ ts: Date.now(), mood });
+          // All state is in memory only. No persistence in this sandbox.
+
+          // Show affirmation
+          const affirmation = document.getElementById('mood-affirmation');
+          affirmation.textContent = moodAffirmations[mood];
+          affirmation.classList.add('show');
+        });
+      });
+
+      // Task chips
+      document.querySelectorAll('.task-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          chip.classList.toggle('completed');
+        });
+      });
+
+      // SOS button
+      document.getElementById('sos-btn').addEventListener('click', handleSOSTap);
+
+      // Close SOS
+      document.getElementById('close-sos').addEventListener('click', closeSOS);
+
+      // Therapy cards
+      document.addEventListener('click', (e) => {
+        const therapyCard = e.target.closest('.therapy-card');
+        if (therapyCard) {
+          const index = parseInt(therapyCard.dataset.therapyIndex);
+          showTherapyDetail(index);
+        }
+      });
+
+      // Back to therapy overview
+      document.getElementById('back-to-therapy').addEventListener('click', hideTherapyDetail);
+
+      // Assessment cards
+      document.addEventListener('click', (e) => {
+        const assessmentCard = e.target.closest('[data-assessment]');
+        if (assessmentCard) {
+          const assessmentId = assessmentCard.dataset.assessment;
+          startAssessment(assessmentId);
+        }
+      });
+
+      // Exit assessment
+      document.getElementById('exit-assessment').addEventListener('click', () => {
+        appState.assessmentActive = false;
+        document.getElementById('assessment-screen').style.display = 'none';
+        document.getElementById('assessment-list').style.display = 'block';
+      });
+
+      // Back to assessments from Mind Profile
+      document.getElementById('back-to-assessments').addEventListener('click', () => {
+        document.getElementById('mind-profile-report').style.display = 'none';
+        document.getElementById('assessment-list').style.display = 'block';
+      });
+
+      // View full schedule
+      document.getElementById('view-full-schedule').addEventListener('click', showFullSchedule);
+
+      // Therapy tabs
+      document.addEventListener('click', (e) => {
+        const tab = e.target.closest('.tab');
+        if (tab && tab.closest('#therapy-tabs')) {
+          const tabName = tab.dataset.tab;
+          document.querySelectorAll('#therapy-tabs .tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          document.getElementById('tab-activities').style.display = tabName === 'activities' ? 'block' : 'none';
+          document.getElementById('tab-nearme').style.display = tabName === 'nearme' ? 'block' : 'none';
+        }
+      });
+
+      // View helplines
+      document.getElementById('view-helplines-btn').addEventListener('click', showHelplines);
+      document.getElementById('close-helplines').addEventListener('click', () => {
+        document.getElementById('helplines-modal').style.display = 'none';
+      });
+    }
+
+    // Initialize app when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>
